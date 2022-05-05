@@ -1,0 +1,174 @@
+/*define margin and padding so that the browser does not interfere with the code*/
+ * { 
+    margin: 0;
+    padding: 0;
+
+}
+/*not quite sure what this does*/
+html,
+body{
+    height: 100%;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+
+/*background colour*/
+#container{
+    display: flex;
+    background-color:#406a89;
+    height: 100%;
+    align-items: center;
+    flex-direction: column;
+}
+
+#game{
+width: 100;
+max-width: 500px;
+margin:0 auto;
+height: 100%;
+display: flex;
+flex-direction: column;
+
+}
+
+
+
+/*header and the colour is from the actual website*/
+header{
+    border-bottom: 1px solid rgb(58, 58, 68);
+}
+
+.title{
+    color: #7c0202;
+    /*find out how rem differs from pixels*/
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0.4 rem 0 0.4rem 0;
+    text-align: center;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+#board-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    overflow: hidden;
+    
+}
+
+#board{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 5px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.square{
+    border: 2px solid rgb(58, 58, 68);
+    min-width: 60px;
+    min-height: 60px;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+#keyboard-container {
+    margin: 0 8px;
+    user-select: none;
+    height: 200px;
+}
+  
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto 8px;
+    touch-action: manipulation;
+}
+
+
+.keyboard-row button {
+    font-family: inherit;
+    font-weight: bold;
+    border: 0;
+    padding: 0;
+    height: 58px;
+    cursor: pointer;
+    background-color: rgb(0 0 0);
+    color: rgb(141 32 32);
+    flex-grow: 1;
+    text-transform: uppercase;
+    margin-right: 6px;
+    border-radius: 4px;
+    user-select: none;
+}
+
+.keyboard-row button.wide-button{
+     flex-grow: 1.5;
+ }
+
+.spacer-half{
+    flex-grow: 0.5;
+}
+
+
+/*sick animation for the buttons just for fun to make it more interactive*/
+.glow-on-hover {
+    height: 50px;
+    border: none;
+    outline: none;
+    color: #fff;
+    background: #111;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    border-radius: 10px;
+}
+
+.glow-on-hover:before {
+    content: '';
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    position: absolute;
+    top: -2px;
+    left:-2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    border-radius: 10px;
+}
+
+.glow-on-hover:active {
+    color: #000
+}
+
+.glow-on-hover:active:after {
+    background: transparent;
+}
+
+.glow-on-hover:hover:before {
+    opacity: 1;
+}
+
+.glow-on-hover:after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #111;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+}
+
+@keyframes glowing {
+    0% { background-position: 0 0; }
+    50% { background-position: 400% 0; }
+    100% { background-position: 0 0; }
+}
