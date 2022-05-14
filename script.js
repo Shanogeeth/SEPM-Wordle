@@ -1,4 +1,4 @@
-const targetWords =[
+const targetWords = [
     "cigar",
     "rebut",
     "sissy",
