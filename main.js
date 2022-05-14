@@ -1,24 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-document.addEventListener("DOMContentLoaded", () => {
-
-    createSquares();
-
-    function createSquares(){
-        const gameBoard = document.getElementById("board");
-
-        for (let index = 0; index < 30; index++) {
-           let square = document.createElement("div");
-           square.classList.add("square");
-           square.setAttribute("id", index + 1);
-           gameBoard.appendChild(square);
-        }
-    }    
-        
-});
-=======
-=======
->>>>>>> 9854e99 (code)
 const targetWords = [
     "cigar",
     "rebut",
@@ -15508,25 +15487,3 @@ function danceTiles(tiles){
 
 }
 
-<<<<<<< HEAD
->>>>>>> d3cfef0 (renamed files)
-=======
-=======
-document.addEventListener("DOMContentLoaded", () => {
-
-    createSquares();
-
-    function createSquares(){
-        const gameBoard = document.getElementById("board");
-
-        for (let index = 0; index < 30; index++) {
-           let square = document.createElement("div");
-           square.classList.add("square");
-           square.setAttribute("id", index + 1);
-           gameBoard.appendChild(square);
-        }
-    }    
-        
-});
->>>>>>> c69fe8c (Add files via upload)
->>>>>>> 9854e99 (code)
