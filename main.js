@@ -15540,9 +15540,10 @@ function showLosingResults() {
 }
 
 function updateTotalGames() {
-    const totalGames = document.getElementById("final-score");
+    const finalResultEl = document.getElementById("final-score");
+    const totalGames = window.localStorage.getItem("totalGames");
     // finalResultEl.textContent = ''
-    window.localStorage.setItem('totalGames', Number(totalGames) + 1);
+    window.localStorage.setItem('totalGames', Number(totalGames) + 1)
 }
 
 function statModal() {
@@ -15553,7 +15554,7 @@ function statModal() {
 
     document.getElementById('total-played').textContent = totalGames;
     document.getElementById('total-wins').textContent = totalWins;
-    document.getElementById('total-streak').textContent = totalStreak;
+    document.getElementById('total-streak').textContent = currentStreak;
 
     document.getElementById('win-percent').textContent = windpercent;
 }
