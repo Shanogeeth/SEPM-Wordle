@@ -15301,10 +15301,24 @@ const msOffset = Date.now() - offsetFromDate         //this the difference in mi
 const dayOffset = msOffset /1000 /60 /60 /24         //this converts a millisecond value to a day value
 //console.log(dayOffset)
 const targetWord = targetWords[Math.floor(dayOffset)]
+const isStorage = 'undefined' !==typeof localStorage;
   
 startInterplay()
+initialStorage();
 
+// if (isStorage && localStorage.getItem('fap-scores')){
+//     ElementInternals.scores = localStorage.getItem('fap-scores').split(',');
+// }
   
+function initialStorage(){
+    const storedCurrentWord = window.localStorage.getItem('targetWord')
+    if (!storedCurrentWord) {
+        window.localStorage.setItem('targetWord', targetWord)
+    }else{
+        currentWord = storedtargetWord
+    }
+}
+
 function startInterplay(){
     document.addEventListener("click", mouseClicks)
     document.addEventListener("keydown", keyInputs)
@@ -15462,13 +15476,19 @@ function checkWinLose(guess, tiles){
     if (guess === targetWord) {
         showAlert("You Win", 5000)
         danceTiles(tiles)
+        showResults()
+        showTotalGames()
         stopInterplay()
+
+
         return
     }
 
     const remainingTiles = guessGrid.querySelectorAll(":not([data-letter])")
     if (remainingTiles.length === 0){
         showAlert(targetWord.toUpperCase(), null)
+        showLosingResults()
+        showTotalGames()
         stopInterplay()
     }
 }
@@ -15487,3 +15507,25 @@ function danceTiles(tiles){
 
 }
 
+
+function showResults(){
+    const finalResultEl = document.getElementById("final-score");
+    // finalResultEl.textContent = "Wordle "
+    const totalWins = window.localStorage.getItem('totalWins')|| 0;
+    window.localStorage.setItem('totalWins', Number(totalWins)+1)
+
+    const currentStreak = window.localStorage.getItem('currentStreak')|| 0;
+    window.localStorage.setItem('currentStreak', Number(currentStreak) +  1)
+}
+
+function showLosingResults(){
+    const finalResultEl = document.getElementById("final-score");
+    // finalResultEl.textContent = ''
+    window.localStorage.setItem('currentStreak', 0);
+}
+
+function updateTotalGames(){
+    const totalGames = document.getElementById("final-score");
+    // finalResultEl.textContent = ''
+    window.localStorage.setItem('totalGames', Number(totalGames)+1);
+}
