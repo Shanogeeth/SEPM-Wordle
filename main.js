@@ -15298,86 +15298,96 @@ const alertContainer = document.querySelector("[data-message-container]")
 const guessGrid = document.querySelector("[data-game-matrix]")
 const offsetFromDate = new Date(2022, 4, 12)         //this is the date in order to be able to have a new word each day
 const msOffset = Date.now() - offsetFromDate         //this the difference in milliseconds of the current date and the offest we created 
-const dayOffset = msOffset /1000 /60 /60 /24         //this converts a millisecond value to a day value
+const dayOffset = msOffset / 1000 / 60 / 60 / 24         //this converts a millisecond value to a day value
 //console.log(dayOffset)
 const targetWord = targetWords[Math.floor(dayOffset)]
-const isStorage = 'undefined' !==typeof localStorage;
-  
+const isStorage = 'undefined' !== typeof localStorage;
+
 startInterplay()
 initialStorage();
 
 // if (isStorage && localStorage.getItem('fap-scores')){
 //     ElementInternals.scores = localStorage.getItem('fap-scores').split(',');
 // }
-  
-function initialStorage(){
+
+function initialStorage() {
     const storedCurrentWord = window.localStorage.getItem('targetWord')
     if (!storedCurrentWord) {
         window.localStorage.setItem('targetWord', targetWord)
-    }else{
-        currentWord = storedtargetWord
+    } else {
+        currentWord = targetWord
     }
 }
 
-function startInterplay(){
+function startInterplay() {
     document.addEventListener("click", mouseClicks)
     document.addEventListener("keydown", keyInputs)
 }
 
-function stopInterplay(){
+function stopInterplay() {
     document.removeEventListener("click", mouseClicks)
     document.removeEventListener("keydown", keyInputs)
 }
 
-function mouseClicks(e){                  //the e is an event object
-    if (e.target.matches("[data-key]")){       //this if statement enables selecting an active letter 
+function preserveGameState(){
+    window.localStorage.setItem('guessWords',JSON.stringify(guessedWords))
+
+    const keyboardContainer = document.getElementById('keyboard-container')
+    window.localStorage.setItem('keyboardContainer', keyboardContainer.innerHTML);
+
+    const boardContainer = document.getElementById('board-container')
+    window.localStorage.setItem('boardContainer', keyboardContainer.innerHTML);
+}
+
+function mouseClicks(e) {                  //the e is an event object
+    if (e.target.matches("[data-key]")) {       //this if statement enables selecting an active letter 
         pressKey(e.target.dataset.key)
         return
-    }  
-    
-    if (e.target.matches("[data-enter]")){     //this if statement tells if the selected key is enter then submit the guess
+    }
+
+    if (e.target.matches("[data-enter]")) {     //this if statement tells if the selected key is enter then submit the guess
         submitGuess()
         return
     }
 
-    if (e.target.matches("[data-delete]")){
+    if (e.target.matches("[data-delete]")) {
         deleteKey()
         return
     }
 
 }
 
-function keyInputs(e){
+function keyInputs(e) {
     //console.log(e)
-    if (e.key === "Enter"){                  //if we press enter on the keyboard then submit the guessed word
+    if (e.key === "Enter") {                  //if we press enter on the keyboard then submit the guessed word
         submitGuess()
         return
     }
 
-    if (e.key === "Backspace" || e.key === "Delete"){     //if we press backspace or delete on the keyboard then we delete the key from the grid
+    if (e.key === "Backspace" || e.key === "Delete") {     //if we press backspace or delete on the keyboard then we delete the key from the grid
         deleteKey()
         return
     }
 
-    if (e.key.match(/^[a-z]$/)){             //this if statement excludes other characters that are not in the alphabet a-z
+    if (e.key.match(/^[a-z]$/)) {             //this if statement excludes other characters that are not in the alphabet a-z
         pressKey(e.key)
         return
     }
 
 }
 
-function pressKey(key){
+function pressKey(key) {
     const activeTiles = getActiveTiles()
-    if(activeTiles.length >= WORD_LENGTH) return                 //this limits one typing more than 5 letters per row
+    if (activeTiles.length >= WORD_LENGTH) return                 //this limits one typing more than 5 letters per row
     const nextTile = guessGrid.querySelector(":not([data-letter])")    //selecting the grid that does not have the data-letter in it in order to put in a letter. since the second grid wont have a letter it will automatically put in a letter in it
     nextTile.dataset.letter = key.toLowerCase()
     nextTile.textContent = key
     nextTile.dataset.state = "active"              //this gives it that white color we did in css showing that it is already selected
 }
 
-function deleteKey(){
+function deleteKey() {
     const activeTiles = getActiveTiles()
-    const lastTile = activeTiles[activeTiles.length -1]
+    const lastTile = activeTiles[activeTiles.length - 1]
     if (lastTile == null) return
     lastTile.textContent = ""
     delete lastTile.dataset.state
@@ -15385,68 +15395,73 @@ function deleteKey(){
 
 }
 
-function submitGuess(){
+function submitGuess() {
     const activeTiles = [...getActiveTiles()]
-    if (activeTiles.length !== WORD_LENGTH){
+    if (activeTiles.length !== WORD_LENGTH) {
         showAlert("Not enough letters")
         shakeTiles(activeTiles)
         return
     }
 
-    const guess = activeTiles.reduce((word, tile) => {     //inserts all letters to make up the guessed word
+    const guess = activeTiles.reduce((word, tile) => {
         return word + tile.dataset.letter
     }, "")
 
-    if (!dictionary.includes(guess)){
+    if (!dictionary.includes(guess)) {
         showAlert("Not in word list")
         shakeTiles(activeTiles)
         return
     }
 
+// Preserve game stats should technically help save the user entered stats.
+    // preserveGameState()
+
+    
     stopInterplay()
-    activeTiles.forEach((...params) => flipTile(...params, guess))   //...params means all of my parameters
+
+    activeTiles.forEach((...params) => flipTile(...params, guess))
 
 }
 
-function flipTile(tile, index, array, guess){
+function flipTile(tile, index, array, guess) {
     const letter = tile.dataset.letter
     const key = keyboard.querySelector(`[data-key="${letter}"i]`)   //note  there is a use of b... the i is to make it case insensitive
-    setTimeout (()=>{
+    setTimeout(() => {
         tile.classList.add("flip")
 
     }, (index * FLIP_ANIMATION_DURATION) / 2)
 
     tile.addEventListener("transitionend", () => {      //fill was not visible
         tile.classList.remove("flip")                   //transitioned to a point where flip was visible
-        if(targetWord[index] === letter){
+        if (targetWord[index] === letter) {
             tile.dataset.state = "correct"
             key.classList.add("correct")
-        } else if (targetWord.includes(letter)){
+        } else if (targetWord.includes(letter)) {
             tile.dataset.state = "wrong-location"
             key.classList.add("wrong-location")
-        } else{
+        } else {
             tile.dataset.state = "wrong"
             key.classList.add("wrong")
         }
 
-        if (index === array.length -1){
+        if (index === array.length - 1) {
             tile.addEventListener("transitionend", () => {
                 startInterplay()
                 checkWinLose(guess, array)
-            }, {once: true})
-            
+            }, { once: true })
+
         }
-    }, {once: true})
+    }, { once: true })
 }
 
-function getActiveTiles(){
+function getActiveTiles() {
     return guessGrid.querySelectorAll('[data-state="active"]')
 }
 
-function showAlert(message, duration = 1000 ){      //the duration is in milliseconds so that is just one second
+function showAlert(message, duration = 1000) {      //the duration is in milliseconds so that is just one second
     const alert = document.createElement("div")
     alert.textContent = message
-    alert.classList.add("alert") 
+    alert.classList.add("alert")
     alertContainer.prepend(alert)
 
     if (duration == null) return
@@ -15463,21 +15478,21 @@ function showAlert(message, duration = 1000 ){      //the duration is in millise
 
 }
 
-function shakeTiles(tiles){
+function shakeTiles(tiles) {
     tiles.forEach(tile => {
         tile.classList.add("shake")
         tile.addEventListener("animationend", () => {
             tile.classList.remove("shake")
-        }, {once: true})
+        }, { once: true })
     })
 }
 
-function checkWinLose(guess, tiles){
+function checkWinLose(guess, tiles) {
     if (guess === targetWord) {
         showAlert("You Win", 5000)
         danceTiles(tiles)
         showResults()
-        showTotalGames()
+        updateTotalGames()
         stopInterplay()
 
 
@@ -15485,15 +15500,15 @@ function checkWinLose(guess, tiles){
     }
 
     const remainingTiles = guessGrid.querySelectorAll(":not([data-letter])")
-    if (remainingTiles.length === 0){
+    if (remainingTiles.length === 0) {
         showAlert(targetWord.toUpperCase(), null)
         showLosingResults()
-        showTotalGames()
+        updateTotalGames()
         stopInterplay()
     }
 }
 
-function danceTiles(tiles){
+function danceTiles(tiles) {
     tiles.forEach((tile, index) => {
         setTimeout(() => {
 
@@ -15501,31 +15516,63 @@ function danceTiles(tiles){
             tile.addEventListener("animationend", () => {
 
                 tile.classList.remove("dance")
-        }, {once: true})
+            }, { once: true })
         }, (index * DANCE_ANIMATION_DURATION) / 5)
     })
 
 }
 
 
-function showResults(){
+function showResults() {
     const finalResultEl = document.getElementById("final-score");
     // finalResultEl.textContent = "Wordle "
-    const totalWins = window.localStorage.getItem('totalWins')|| 0;
-    window.localStorage.setItem('totalWins', Number(totalWins)+1)
+    const totalWins = window.localStorage.getItem('totalWins') || 0;
+    window.localStorage.setItem('totalWins', Number(totalWins) + 1)
 
-    const currentStreak = window.localStorage.getItem('currentStreak')|| 0;
-    window.localStorage.setItem('currentStreak', Number(currentStreak) +  1)
+    const currentStreak = window.localStorage.getItem('currentStreak') || 0;
+    window.localStorage.setItem('currentStreak', Number(currentStreak) + 1)
 }
 
-function showLosingResults(){
+function showLosingResults() {
     const finalResultEl = document.getElementById("final-score");
     // finalResultEl.textContent = ''
     window.localStorage.setItem('currentStreak', 0);
 }
 
-function updateTotalGames(){
+function updateTotalGames() {
     const totalGames = document.getElementById("final-score");
     // finalResultEl.textContent = ''
-    window.localStorage.setItem('totalGames', Number(totalGames)+1);
+    window.localStorage.setItem('totalGames', Number(totalGames) + 1);
+}
+
+function statModal() {
+    const currentStreak = window.localStorage.getItem("CurrentStreak");
+    const totalWins = window.localStorage.getItem("totalWins");
+    const totalGames = window.localStorage.getItem("totalGames");
+    const windpercent = Math.round((totalWins / totalGames) * 100) || 0;
+
+    document.getElementById('total-played').textContent = totalGames;
+    document.getElementById('total-wins').textContent = totalWins;
+    document.getElementById('total-streak').textContent = totalStreak;
+
+    document.getElementById('win-percent').textContent = windpercent;
+}
+
+function initialiseModal() {
+    const modal = document.getElementById("stats-modal");
+    const btn = document.getElementById("close-stats");
+    btn.addEventListener("click", function () {
+        modal.style.display = "block";
+    });
+
+    span.addEventListener("click", function () {
+        statModal()
+        modal.style.display = "none";
+
+    });
+
+    window.addEventListener("click", function () {
+        modal.style.display = "none";
+    })
+
 }
