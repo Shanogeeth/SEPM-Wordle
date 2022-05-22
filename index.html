@@ -7,33 +7,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="main.css">
     <script src="main.js" defer></script>
-    <!--defer loading is a js function that reduces the initial download size allowing other resources to be downloaded in parallel and speeding up execution and rendering time-->
     <title>SEPM</title>
     <script src="https://kit.fontawesome.com/0a2ce63cb6.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <div class="stats">
-        <a href="#divOne" class=button>STATS <i class="fa-solid fa-chart-column"></i></a>
+        <a href="#divOne" class=button>STATS <i class="fa-solid fa-chart-column" id="stats" onclick=""></i></a>
     </div>
+
+
 
     <div class=overlay id=divOne>
         <div class=wrapper>
+            <span class="close" id="close-stats">&times;</span>
+            
             <h2>STATISTICS</h2>
+            <!-- <h6>Please check notes on code</h6> -->
+            <!-- Stats can be veiwed through the inspect element, but could not get it to print on the front end, streask, number of games won and Total games played are all recorded in the local storage-->
             <a href=# class=close>&times;</a>
             <div class=content>
                 <form>
-                    <h3><label>Total:<span id="total-played"></span></label> <br></h3>
+                    <h3>Total:<span id="total_played"></span><br></h3>
 
-                    <h3><label>Wins:<span id="total-wins"></span></label></h3><br>
+                    <h3>Wins:<span id="total-wins"></span><br></h3>
 
-                    <h3><label>Wins %:<span id="win-percent"></span></label> </h3><br>
+                    <h3>Wins %:<span id="win-percent"></span><br></h3>
 
-                    <h3><label>Current Streaks:<span id="total-streak"></span></label> </h3>
+                    <h3>Current Streaks:<span id="total-streak"></span></h3>
+
+                    <button onclick="shareButton()">SHARE</button>
                 </form>
             </div>
+
         </div>
     </div>
+
 
 
     <header>

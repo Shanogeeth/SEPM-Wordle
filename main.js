@@ -15303,8 +15303,9 @@ const dayOffset = msOffset / 1000 / 60 / 60 / 24         //this converts a milli
 const targetWord = targetWords[Math.floor(dayOffset)]
 const isStorage = 'undefined' !== typeof localStorage;
 
-startInterplay()
+startInterplay();
 initialStorage();
+initStatsModal();
 
 // if (isStorage && localStorage.getItem('fap-scores')){
 //     ElementInternals.scores = localStorage.getItem('fap-scores').split(',');
@@ -15546,7 +15547,8 @@ function updateTotalGames() {
     window.localStorage.setItem('totalGames', Number(totalGames) + 1)
 }
 
-function statModal() {
+function getValue() {
+	
     const currentStreak = window.localStorage.getItem("CurrentStreak");
     const totalWins = window.localStorage.getItem("totalWins");
     const totalGames = window.localStorage.getItem("totalGames");
@@ -15559,21 +15561,3 @@ function statModal() {
     document.getElementById('win-percent').textContent = windpercent;
 }
 
-function initialiseModal() {
-    const modal = document.getElementById("stats-modal");
-    const btn = document.getElementById("close-stats");
-    btn.addEventListener("click", function () {
-        modal.style.display = "block";
-    });
-
-    span.addEventListener("click", function () {
-        statModal()
-        modal.style.display = "none";
-
-    });
-
-    window.addEventListener("click", function () {
-        modal.style.display = "none";
-    })
-
-}
